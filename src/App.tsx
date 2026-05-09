@@ -33,7 +33,7 @@ const MouseFollower = () => {
           translateX: '-50%',
           translateY: '-50%',
         }}
-        className="fixed top-0 left-0 w-[500px] h-[500px] bg-primary/15 blur-[120px] rounded-full pointer-events-none z-0"
+        className="fixed top-0 left-0 w-[600px] h-[600px] bg-[#8b5cf6]/10 blur-[120px] rounded-full pointer-events-none z-[-1]"
       />
       <motion.div
         style={{
@@ -43,7 +43,7 @@ const MouseFollower = () => {
           translateY: '-50%',
         }}
         transition={{ type: 'spring', stiffness: 100, damping: 30 }}
-        className="fixed top-0 left-0 w-[300px] h-[300px] bg-accent/10 blur-[80px] rounded-full pointer-events-none z-0"
+        className="fixed top-0 left-0 w-[300px] h-[300px] bg-[#ec4899]/5 blur-[80px] rounded-full pointer-events-none z-[-1]"
       />
     </>
   );

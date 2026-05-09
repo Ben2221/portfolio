@@ -6,22 +6,41 @@ const Contact = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSending, setIsSending] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSending(true);
-    
-    // NOTE: To receive real emails, you need a service like Formspree.
-    // Replace the logic below with a fetch to your Formspree endpoint if you have one.
-    // example: await fetch('https://formspree.io/f/YOUR_ID', { method: 'POST', body: new FormData(e.target) });
-    
-    // Simulate API call for now
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    setIsSending(false);
-    setIsSubmitted(true);
-    
-    // Reset after some time
-    setTimeout(() => setIsSubmitted(false), 5000);
+
+    const formData = new FormData(e.currentTarget);
+    const payload = {
+      name: formData.get('name'),
+      email: formData.get('email'),
+      message: formData.get('message')
+    };
+
+    try {
+      // Calling our secure Vercel Serverless Function
+      const response = await fetch('/api/send', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (response.ok) {
+        setIsSubmitted(true);
+        setTimeout(() => setIsSubmitted(false), 5000);
+      } else {
+        const errData = await response.json();
+        console.error('Submission Error:', errData);
+        alert('Failed to send message. Please try again or email me directly.');
+      }
+    } catch (error) {
+      console.error('Network Error:', error);
+      alert('An error occurred. Please try again.');
+    } finally {
+      setIsSending(false);
+    }
   };
 
   return (
@@ -29,7 +48,7 @@ const Contact = () => {
       <div className="container">
         <div className="max-w-6xl mx-auto">
           <div className="mb-20">
-            <motion.h2 
+            <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -82,7 +101,7 @@ const Contact = () => {
                 </a>
               </div>
             </motion.div>
-            
+
             <motion.div
               initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -91,9 +110,9 @@ const Contact = () => {
               className="glass p-12 relative overflow-hidden"
             >
               <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 blur-[100px] -mr-32 -mt-32" />
-              
+
               {isSubmitted ? (
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   className="relative z-10 flex flex-col items-center justify-center py-20 text-center"
@@ -107,16 +126,16 @@ const Contact = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="flex flex-col gap-3">
                       <label className="text-[10px] font-bold uppercase tracking-widest text-white/20 ml-2">Name</label>
-                      <input required type="text" placeholder="John Doe" className="input-field" />
+                      <input required name="name" type="text" placeholder="John Doe" className="input-field" />
                     </div>
                     <div className="flex flex-col gap-3">
                       <label className="text-[10px] font-bold uppercase tracking-widest text-white/20 ml-2">Email</label>
-                      <input required type="email" placeholder="john@example.com" className="input-field" />
+                      <input required name="email" type="email" placeholder="john@example.com" className="input-field" />
                     </div>
                   </div>
                   <div className="flex flex-col gap-3">
                     <label className="text-[10px] font-bold uppercase tracking-widest text-white/20 ml-2">Your Message</label>
-                    <textarea required rows={6} placeholder="Tell me about your project..." className="input-field resize-none"></textarea>
+                    <textarea required name="message" rows={6} placeholder="Tell me about your project..." className="input-field resize-none"></textarea>
                   </div>
                   <button disabled={isSending} className="btn-premium w-full justify-center group disabled:opacity-50 disabled:cursor-not-allowed">
                     {isSending ? "Sending..." : "Send Message"}
