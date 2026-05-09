@@ -56,18 +56,17 @@ const projects: Project[] = [
   }
 ];
 
-const ProjectCard = ({ project, index, targetScale }: { 
-  project: Project; 
-  index: number; 
-  targetScale: number;
-}) => {
+const ProjectCard = ({ project, index, total }: { project: Project; index: number; total: number }) => {
   const container = useRef(null);
   const { scrollYProgress } = useScroll({
     target: container,
     offset: ['start end', 'start start']
   });
 
+  // This scale effect makes the previous card smaller as you scroll down
+  const targetScale = 1 - ((total - index) * 0.05);
   const scale = useTransform(scrollYProgress, [0, 1], [1, targetScale]);
+
   const cardRef = useRef<HTMLDivElement>(null);
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -79,16 +78,28 @@ const ProjectCard = ({ project, index, targetScale }: {
     mouseY.set(e.clientY - top);
   };
 
+  const handleCardClick = () => {
+    if (project.link) {
+      window.open(project.link, '_blank', 'noopener,noreferrer');
+    } else if (project.github) {
+      window.open(project.github, '_blank', 'noopener,noreferrer');
+    }
+  };
+
   return (
-    <div ref={container} className="h-screen flex items-center justify-center sticky top-0">
+    <div 
+      ref={container}
+      className="h-screen flex items-center justify-center sticky top-0"
+    >
       <motion.div
         ref={cardRef}
         onMouseMove={handleMouseMove}
+        onClick={handleCardClick}
         style={{ 
           scale,
-          top: `calc(-10% + ${index * 25}px)`
+          top: `calc(-5% + ${index * 25}px)`
         }}
-        className="relative h-[550px] w-full glass rounded-[2.5rem] overflow-hidden group border-white/5"
+        className="relative h-[600px] w-full glass rounded-[3rem] overflow-hidden group border-white/5 bg-[#0b0b12]/90 backdrop-blur-3xl shadow-2xl cursor-pointer"
       >
         <div
           className="absolute inset-0 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
@@ -98,16 +109,12 @@ const ProjectCard = ({ project, index, targetScale }: {
         />
 
         <div className="flex flex-col md:flex-row h-full">
-          <div className="md:w-1/2 p-10 md:p-16 flex flex-col justify-between">
+          <div className="md:w-1/2 p-10 md:p-16 flex flex-col justify-between relative z-20">
             <div>
-              <motion.span 
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                className="text-[10px] font-bold uppercase tracking-[0.3em] text-primary mb-4 block"
-              >
+              <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-primary mb-4 block">
                 {project.category}
-              </motion.span>
-              <h3 className="text-5xl md:text-6xl font-black tracking-tightest uppercase mb-8">{project.title}</h3>
+              </span>
+              <h3 className="text-4xl md:text-6xl font-black tracking-tightest mb-8">{project.title}</h3>
               <p className="text-text-muted text-lg leading-relaxed mb-10 max-w-md">
                 {project.description}
               </p>
@@ -121,41 +128,39 @@ const ProjectCard = ({ project, index, targetScale }: {
               </div>
             </div>
 
-            <div className="flex gap-6 mt-12">
+            <div className="flex gap-8 mt-12">
               {project.github && (
-                <motion.a
-                  whileHover={{ scale: 1.1 }}
+                <a
                   href={project.github}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-3 text-xs font-bold uppercase tracking-widest hover:text-primary transition-colors"
+                  onClick={(e) => e.stopPropagation()}
+                  className="flex items-center gap-3 text-xs font-bold uppercase tracking-widest hover:text-primary transition-all duration-300 relative z-30"
                 >
-                  <GithubIcon size={20} /> Code
-                </motion.a>
+                  <GithubIcon size={20} /> <span className="border-b border-white/10 pb-1">Code</span>
+                </a>
               )}
               {project.link && (
-                <motion.a
-                  whileHover={{ scale: 1.1 }}
+                <a
                   href={project.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-3 text-xs font-bold uppercase tracking-widest hover:text-primary transition-colors"
+                  onClick={(e) => e.stopPropagation()}
+                  className="flex items-center gap-3 text-xs font-bold uppercase tracking-widest hover:text-primary transition-all duration-300 relative z-30"
                 >
-                  <ExternalLink size={20} /> Live Demo
-                </motion.a>
+                  <ExternalLink size={20} /> <span className="border-b border-white/10 pb-1">Live App</span>
+                </a>
               )}
             </div>
           </div>
 
-          <div className="md:w-1/2 relative overflow-hidden">
-            <motion.img
+          <div className="md:w-1/2 relative min-h-[300px] md:min-h-full overflow-hidden">
+            <img
               src={project.image}
               alt={project.title}
-              className="w-full h-full object-cover"
-              whileHover={{ scale: 1.05 }}
-              transition={{ duration: 1 }}
+              className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-bg-dark/20 to-transparent pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#0b0b12] via-transparent to-transparent pointer-events-none opacity-60" />
           </div>
         </div>
       </motion.div>
@@ -165,11 +170,11 @@ const ProjectCard = ({ project, index, targetScale }: {
 
 const Projects = () => {
   return (
-    <section id="projects" className="relative pb-[10vh]">
-      <div className="container">
-        <div className="min-h-screen flex flex-col justify-center mb-20">
+    <section id="projects" className="relative py-32">
+      <div className="container relative">
+        <div className="min-h-screen flex flex-col justify-center mb-64">
           <motion.div
-            initial={{ opacity: 0, y: 50 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 1 }}
@@ -178,16 +183,18 @@ const Projects = () => {
               Selected <br /> <span className="text-white/20 italic">Works</span>
             </h2>
             <p className="text-text-muted text-xl max-w-xl leading-relaxed text-balance">
-              A curated collection of projects where security meets sophisticated engineering. Scroll down to see them stack.
+              Building secure and scalable digital experiences. Explore my latest developments in security and full-stack engineering.
             </p>
           </motion.div>
         </div>
 
-        <div className="relative">
-          {projects.map((project, i) => {
-            const targetScale = 1 - ((projects.length - i) * 0.05);
-            return <ProjectCard key={i} index={i} project={project} targetScale={targetScale} />
-          })}
+        {/* Extra travel space for dramatic effect */}
+        <div className="h-[20vh]" />
+
+        <div className="space-y-0 relative">
+          {projects.map((project, i) => (
+            <ProjectCard key={i} index={i} project={project} total={projects.length} />
+          ))}
         </div>
       </div>
     </section>
