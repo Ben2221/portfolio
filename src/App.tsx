@@ -5,19 +5,26 @@ import Contact from './components/Contact';
 import './App.css';
 
 import { motion, useMotionValue, useSpring } from 'framer-motion';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
-const MouseFollower = () => {
+const CustomCursor = () => {
+  const [isHovered, setIsHovered] = useState(false);
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
-  const springX = useSpring(mouseX, { stiffness: 50, damping: 20 });
-  const springY = useSpring(mouseY, { stiffness: 50, damping: 20 });
+  const dotX = useSpring(mouseX, { stiffness: 1000, damping: 40 });
+  const dotY = useSpring(mouseY, { stiffness: 1000, damping: 40 });
+  
+  const ringX = useSpring(mouseX, { stiffness: 150, damping: 25 });
+  const ringY = useSpring(mouseY, { stiffness: 150, damping: 25 });
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       mouseX.set(e.clientX);
       mouseY.set(e.clientY);
+      
+      const target = e.target as HTMLElement;
+      setIsHovered(!!target.closest('a, button, .cursor-pointer'));
     };
 
     window.addEventListener('mousemove', handleMouseMove);
@@ -28,22 +35,29 @@ const MouseFollower = () => {
     <>
       <motion.div
         style={{
-          x: springX,
-          y: springY,
+          x: dotX,
+          y: dotY,
           translateX: '-50%',
           translateY: '-50%',
         }}
-        className="fixed top-0 left-0 w-[600px] h-[600px] bg-[#8b5cf6]/10 blur-[120px] rounded-full pointer-events-none z-[-1]"
+        animate={{
+          scale: isHovered ? 4 : 1,
+          backgroundColor: isHovered ? 'rgba(139, 92, 246, 0.4)' : '#8b5cf6',
+        }}
+        className="fixed top-0 left-0 w-1.5 h-1.5 rounded-full pointer-events-none z-[100] mix-blend-difference"
       />
       <motion.div
         style={{
-          x: springX,
-          y: springY,
+          x: ringX,
+          y: ringY,
           translateX: '-50%',
           translateY: '-50%',
         }}
-        transition={{ type: 'spring', stiffness: 100, damping: 30 }}
-        className="fixed top-0 left-0 w-[300px] h-[300px] bg-[#ec4899]/5 blur-[80px] rounded-full pointer-events-none z-[-1]"
+        animate={{
+          scale: isHovered ? 1.5 : 0,
+          opacity: isHovered ? 1 : 0
+        }}
+        className="fixed top-0 left-0 w-12 h-12 border border-primary/50 rounded-full pointer-events-none z-[100]"
       />
     </>
   );
@@ -52,7 +66,7 @@ const MouseFollower = () => {
 function App() {
   return (
     <div className="app">
-      <MouseFollower />
+      <CustomCursor />
       <Navbar />
       <main className="relative z-10">
         <Hero />

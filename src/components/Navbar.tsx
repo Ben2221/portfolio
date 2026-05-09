@@ -1,5 +1,6 @@
 import { motion, useScroll, useSpring } from 'framer-motion';
 import { Mail } from 'lucide-react';
+import Magnetic from './Magnetic';
 
 const GithubIcon = ({ size = 16 }: { size?: number }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -45,30 +46,44 @@ const Navbar = () => {
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="glass px-8 py-3 flex items-center gap-10"
         >
-          <div className="text-xs font-black tracking-widest uppercase">
-            <a href="#" className="nav-link">
-              BenSavio<span className="text-primary">.</span>
-            </a>
-          </div>
+          <Magnetic>
+            <div className="text-xs font-black tracking-widest uppercase">
+              <a href="#" className="nav-link">
+                BenSavio<span className="text-primary">.</span>
+              </a>
+            </div>
+          </Magnetic>
 
           <div className="hidden md:flex gap-8 border-l border-white/10 pl-8">
-            <a href="#projects" className="nav-link">Work</a>
-            <a href="#contact" className="nav-link">Contact</a>
+            <Magnetic>
+              <a href="#projects" className="nav-link">Work</a>
+            </Magnetic>
+            <Magnetic>
+              <a href="#contact" className="nav-link">Contact</a>
+            </Magnetic>
           </div>
 
           <div className="flex gap-5 items-center pl-8 border-l border-white/10">
-            <a href="https://github.com/Ben2221" target="_blank" rel="noopener noreferrer" className="text-text-muted hover:text-white transition-colors">
-              <GithubIcon size={16} />
-            </a>
-            <a href="https://linkedin.com/in/ben-savio-6032a2290/" target="_blank" rel="noopener noreferrer" className="text-text-muted hover:text-white transition-colors">
-              <LinkedinIcon size={16} />
-            </a>
-            <a href="https://x.com/Savvy2221" target="_blank" rel="noopener noreferrer" className="text-text-muted hover:text-white transition-colors">
-              <XIcon size={16} />
-            </a>
-            <a href="mailto:bensavio2221@gmail.com" className="text-text-muted hover:text-white transition-colors">
-              <Mail size={16} />
-            </a>
+            <Magnetic>
+              <a href="https://github.com/Ben2221" target="_blank" rel="noopener noreferrer" className="text-text-muted hover:text-white transition-colors">
+                <GithubIcon size={16} />
+              </a>
+            </Magnetic>
+            <Magnetic>
+              <a href="https://linkedin.com/in/ben-savio-6032a2290/" target="_blank" rel="noopener noreferrer" className="text-text-muted hover:text-white transition-colors">
+                <LinkedinIcon size={16} />
+              </a>
+            </Magnetic>
+            <Magnetic>
+              <a href="https://x.com/Savvy2221" target="_blank" rel="noopener noreferrer" className="text-text-muted hover:text-white transition-colors">
+                <XIcon size={16} />
+              </a>
+            </Magnetic>
+            <Magnetic>
+              <a href="mailto:bensavio2221@gmail.com" className="text-text-muted hover:text-white transition-colors">
+                <Mail size={16} />
+              </a>
+            </Magnetic>
           </div>
         </motion.nav>
       </div>
@@ -77,5 +92,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-
-

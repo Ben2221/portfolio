@@ -1,5 +1,5 @@
-import { motion, useMotionValue } from 'framer-motion';
-import { ArrowUpRight } from 'lucide-react';
+import { motion, useMotionValue, useScroll, useTransform } from 'framer-motion';
+import { ExternalLink } from 'lucide-react';
 import React, { useRef } from 'react';
 
 const GithubIcon = ({ size = 20 }: { size?: number }) => (
@@ -34,7 +34,6 @@ const projects: Project[] = [
     category: "Cybersecurity / Python",
     description: "A modular web vulnerability scanner detecting OWASP Top 10 flaws like SQLi and XSS. Features automated auditing and structured report generation.",
     tech: ["Python", "OWASP Top 10", "Bash", "Security Auditing"],
-    //link: "https://hopalong.benser.tech",
     github: "https://github.com/Ben2221/HexaScan",
     image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=1200"
   },
@@ -52,13 +51,23 @@ const projects: Project[] = [
     category: "AI / Legal Tech",
     description: "AI-powered legal assistant using RAG for precise document analysis and retrieval, bridging the gap between complex law and clear answers.",
     tech: ["Python", "OpenAI", "Next.js", "Pinecone"],
-    //link: "https://hopalong.benser.tech",
     github: "https://github.com/Ben2221/askmelaw",
     image: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&q=80&w=1200"
   }
 ];
 
-const ProjectCard = ({ project, index }: { project: Project; index: number }) => {
+const ProjectCard = ({ project, index, targetScale }: { 
+  project: Project; 
+  index: number; 
+  targetScale: number;
+}) => {
+  const container = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: container,
+    offset: ['start end', 'start start']
+  });
+
+  const scale = useTransform(scrollYProgress, [0, 1], [1, targetScale]);
   const cardRef = useRef<HTMLDivElement>(null);
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -70,117 +79,115 @@ const ProjectCard = ({ project, index }: { project: Project; index: number }) =>
     mouseY.set(e.clientY - top);
   };
 
-  const handleCardClick = () => {
-    if (project.link) {
-      window.open(project.link, '_blank', 'noopener,noreferrer');
-    }
-  };
-
   return (
-    <motion.div
-      ref={cardRef}
-      onMouseMove={handleMouseMove}
-      onClick={handleCardClick}
-      initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 1, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
-      className="group relative glass overflow-hidden cursor-pointer"
-    >
-      <div
-        className="absolute inset-0 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-        style={{
-          background: `radial-gradient(600px circle at ${mouseX}px ${mouseY}px, rgba(139, 92, 246, 0.15), transparent 40%)`
+    <div ref={container} className="h-screen flex items-center justify-center sticky top-0">
+      <motion.div
+        ref={cardRef}
+        onMouseMove={handleMouseMove}
+        style={{ 
+          scale,
+          top: `calc(-10% + ${index * 25}px)`
         }}
-      />
-
-      <div className="relative h-[500px] overflow-hidden">
-        <img
-          src={project.image}
-          alt={project.title}
-          className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+        className="relative h-[550px] w-full glass rounded-[2.5rem] overflow-hidden group border-white/5"
+      >
+        <div
+          className="absolute inset-0 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+          style={{
+            background: `radial-gradient(800px circle at ${mouseX}px ${mouseY}px, rgba(139, 92, 246, 0.1), transparent 40%)`
+          }}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-bg-dark via-bg-dark/40 to-transparent" />
 
-        <div className="absolute bottom-0 left-0 p-10 w-full">
-          <div className="flex justify-between items-end mb-6">
+        <div className="flex flex-col md:flex-row h-full">
+          <div className="md:w-1/2 p-10 md:p-16 flex flex-col justify-between">
             <div>
-              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary mb-3 block">{project.category}</span>
-              <h3 className="text-4xl md:text-5xl font-black tracking-tightest uppercase">{project.title}</h3>
+              <motion.span 
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                className="text-[10px] font-bold uppercase tracking-[0.3em] text-primary mb-4 block"
+              >
+                {project.category}
+              </motion.span>
+              <h3 className="text-5xl md:text-6xl font-black tracking-tightest uppercase mb-8">{project.title}</h3>
+              <p className="text-text-muted text-lg leading-relaxed mb-10 max-w-md">
+                {project.description}
+              </p>
+              
+              <div className="flex flex-wrap gap-2">
+                {project.tech.map(t => (
+                  <span key={t} className="text-[9px] font-bold uppercase tracking-widest px-4 py-2 rounded-full bg-white/5 border border-white/5">
+                    {t}
+                  </span>
+                ))}
+              </div>
             </div>
-            <div className="flex gap-4 relative z-20">
+
+            <div className="flex gap-6 mt-12">
               {project.github && (
-                <a
+                <motion.a
+                  whileHover={{ scale: 1.1 }}
                   href={project.github}
                   target="_blank"
                   rel="noopener noreferrer"
-                  onClick={(e) => e.stopPropagation()}
-                  className="w-12 h-12 rounded-full glass flex items-center justify-center text-text-muted hover:text-white transition-all hover:scale-110"
+                  className="flex items-center gap-3 text-xs font-bold uppercase tracking-widest hover:text-primary transition-colors"
                 >
-                  <GithubIcon size={20} />
-                </a>
+                  <GithubIcon size={20} /> Code
+                </motion.a>
               )}
               {project.link && (
-                <a
+                <motion.a
+                  whileHover={{ scale: 1.1 }}
                   href={project.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  onClick={(e) => e.stopPropagation()}
-                  className="w-12 h-12 rounded-full glass flex items-center justify-center text-text-muted hover:text-white transition-all hover:scale-110"
+                  className="flex items-center gap-3 text-xs font-bold uppercase tracking-widest hover:text-primary transition-colors"
                 >
-                  <ArrowUpRight size={20} />
-                </a>
+                  <ExternalLink size={20} /> Live Demo
+                </motion.a>
               )}
             </div>
           </div>
 
-          <p className="text-text-muted text-lg max-w-xl line-clamp-2 group-hover:line-clamp-none transition-all duration-500">
-            {project.description}
-          </p>
-
-          <div className="mt-8 flex flex-wrap gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-            {project.tech.map(t => (
-              <span key={t} className="text-[9px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full bg-white/5 border border-white/5 text-white/40">
-                {t}
-              </span>
-            ))}
+          <div className="md:w-1/2 relative overflow-hidden">
+            <motion.img
+              src={project.image}
+              alt={project.title}
+              className="w-full h-full object-cover"
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 1 }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-bg-dark/20 to-transparent pointer-events-none" />
           </div>
         </div>
-      </div>
-    </motion.div>
+      </motion.div>
+    </div>
   );
 };
 
 const Projects = () => {
   return (
-    <section id="projects" className="section-padding relative">
+    <section id="projects" className="relative pb-[10vh]">
       <div className="container">
-        <div className="mb-40">
+        <div className="min-h-screen flex flex-col justify-center mb-20">
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 1 }}
           >
-            <h2 className="text-6xl md:text-[7rem] font-black tracking-tightest uppercase mb-12">
-              Selected <br /> <span className="text-white/20">Works</span>
+            <h2 className="text-7xl md:text-[10rem] font-black tracking-tightest uppercase leading-[0.8] mb-12">
+              Selected <br /> <span className="text-white/20 italic">Works</span>
             </h2>
-            <div className="flex flex-col md:flex-row justify-between items-end gap-10">
-              <p className="text-text-muted text-xl max-w-xl leading-relaxed text-balance">
-                A collection of digital products that blend innovative engineering with sophisticated aesthetics.
-              </p>
-              <div className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/20 flex items-center gap-4">
-                <span className="w-12 h-[1px] bg-white/10" />
-                Scroll to explore
-              </div>
-            </div>
+            <p className="text-text-muted text-xl max-w-xl leading-relaxed text-balance">
+              A curated collection of projects where security meets sophisticated engineering. Scroll down to see them stack.
+            </p>
           </motion.div>
         </div>
 
-        <div className="grid grid-cols-1 gap-12">
-          {projects.map((project, index) => (
-            <ProjectCard key={index} project={project} index={index} />
-          ))}
+        <div className="relative">
+          {projects.map((project, i) => {
+            const targetScale = 1 - ((projects.length - i) * 0.05);
+            return <ProjectCard key={i} index={i} project={project} targetScale={targetScale} />
+          })}
         </div>
       </div>
     </section>
@@ -188,4 +195,3 @@ const Projects = () => {
 };
 
 export default Projects;
-

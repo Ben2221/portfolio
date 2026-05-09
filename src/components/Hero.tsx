@@ -1,99 +1,141 @@
-import { motion } from 'framer-motion';
-import { ArrowUpRight } from 'lucide-react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { ArrowDown, Mail, Shield, Code2, Terminal } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+
+const GithubIcon = ({ size = 20 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path>
+    <path d="M9 18c-4.51 2-5-2-7-2"></path>
+  </svg>
+);
+
+const LinkedinIcon = ({ size = 20 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+    <rect width="4" height="12" x="2" y="9"></rect>
+    <circle cx="4" cy="4" r="2"></circle>
+  </svg>
+);
 
 const Hero = () => {
+  const [text, setText] = useState('');
+  const fullText = "Full Stack Engineer & Cyber Security Enthusiast";
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    if (index < fullText.length) {
+      const timeout = setTimeout(() => {
+        setText(prev => prev + fullText[index]);
+        setIndex(index + 1);
+      }, 30);
+      return () => clearTimeout(timeout);
+    }
+  }, [index]);
+
+  const { scrollY } = useScroll();
+  const y1 = useTransform(scrollY, [0, 500], [0, 150]);
+  const opacity = useTransform(scrollY, [0, 300], [1, 0]);
+
   return (
-    <section className="relative min-h-screen flex items-center justify-center px-6 overflow-hidden pt-20">
-      {/* Background Orbs */}
-      <div className="mesh-bg" />
-      <div className="mesh-orb w-[600px] h-[600px] bg-primary -top-20 -left-20" />
-      <div className="mesh-orb w-[500px] h-[500px] bg-accent -bottom-20 -right-20" style={{ animationDelay: '-5s' }} />
+    <section className="relative min-h-screen flex flex-col items-center justify-center pt-20 px-6">
+      {/* Background Decorative Grid */}
+      <div className="absolute inset-0 z-0 opacity-20">
+        <div className="absolute inset-0 bg-[radial-gradient(#ffffff10_1px,transparent_1px)] [background-size:32px_32px]" />
+      </div>
 
       <div className="container relative z-10">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
+        <div className="flex flex-col items-center text-center max-w-5xl mx-auto">
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            className="mb-12 relative"
           >
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.3 }}
-              className="mb-8 inline-flex items-center gap-3 px-5 py-2.5 rounded-full glass text-[10px] font-bold tracking-[0.2em] uppercase border-white/5"
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_10px_var(--primary-glow)] animate-pulse" />
-              Cyber Security Specialist & Full Stack Dev
-            </motion.div>
-
-            <h1 className="text-[10vw] lg:text-[7rem] font-black mb-10 tracking-tightest leading-[0.85] text-gradient uppercase">
-              Ben <br /> <span className="text-white/20">Savio</span><span className="text-primary">.</span>
-            </h1>
-
-            <p className="max-w-xl text-lg md:text-xl text-text-muted mb-14 font-medium leading-relaxed text-balance">
-              Computer Science student at IIIT Kottayam
-              I build secure, high-performance applications and specialized security tools.
-            </p>
-
-            <div className="flex flex-col sm:flex-row items-center gap-8">
-              <a href="#projects" className="btn-premium w-full sm:w-auto justify-center">
-                Explore Work <ArrowUpRight size={18} />
-              </a>
-              <a href="#contact" className="text-xs font-bold uppercase tracking-widest text-text-muted hover:text-white transition-colors border-b border-white/10 pb-1">
-                Start a Conversation
-              </a>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
-            animate={{ opacity: 1, scale: 1, rotate: 0 }}
-            transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-            className="relative hidden lg:block"
-          >
-            {/* Background Glow for Image */}
-            <div className="absolute inset-0 bg-primary/20 blur-[120px] rounded-full -z-10 animate-pulse" />
-            
-            <div className="relative z-10 aspect-square rounded-[3rem] overflow-hidden glass border-white/10 group shadow-2xl">
+            <div className="absolute inset-0 bg-primary/20 blur-[60px] rounded-full animate-pulse" />
+            <div className="relative w-40 h-40 md:w-56 md:h-56 rounded-[3rem] overflow-hidden glass border-white/10 shadow-2xl">
               <img
                 src="/profilev.jpeg"
                 alt="Ben Savio"
-                className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                className="w-full h-full object-cover"
                 style={{
-                  maskImage: 'radial-gradient(circle at center, black 40%, transparent 90%)',
-                  WebkitMaskImage: 'radial-gradient(circle at center, black 40%, transparent 90%)'
+                  maskImage: 'radial-gradient(circle at center, black 50%, transparent 100%)',
+                  WebkitMaskImage: 'radial-gradient(circle at center, black 50%, transparent 100%)'
                 }}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-bg-dark via-transparent to-transparent" />
+            </div>
+            
+            {/* Floating Icons */}
+            <motion.div animate={{ y: [0, -10, 0] }} transition={{ duration: 3, repeat: Infinity }} className="absolute -top-4 -right-4 w-12 h-12 glass rounded-2xl flex items-center justify-center text-primary border-white/10">
+              <Shield size={20} />
+            </motion.div>
+            <motion.div animate={{ y: [0, 10, 0] }} transition={{ duration: 4, repeat: Infinity, delay: 0.5 }} className="absolute -bottom-4 -left-4 w-12 h-12 glass rounded-2xl flex items-center justify-center text-accent border-white/10">
+              <Code2 size={20} />
+            </motion.div>
+          </motion.div>
+
+          <motion.div
+            style={{ y: y1, opacity }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.2 }}
+          >
+            <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-bold uppercase tracking-[0.3em] text-white/40 mb-10">
+              <Terminal size={14} className="text-primary" />
+              IIIT Kottayam • 2023-2027
             </div>
 
-            {/* Decorative elements */}
-            <motion.div
-              animate={{
-                y: [0, -20, 0],
-                rotate: [0, 5, 0]
-              }}
-              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute -top-10 -right-10 w-32 h-32 glass rounded-full border-white/10 flex items-center justify-center backdrop-blur-xl"
-            >
-              <div className="text-[10px] font-black tracking-widest text-primary">SCROLL</div>
-            </motion.div>
+            <h1 className="text-6xl md:text-[8rem] font-black tracking-tightest leading-[0.85] uppercase mb-10">
+              Ben <span className="text-white/20">Savio</span><span className="text-primary">.</span>
+            </h1>
+
+            <div className="h-6 mb-16">
+              <p className="text-xl md:text-2xl text-text-muted font-medium tracking-tight">
+                {text}<span className="text-primary animate-pulse">|</span>
+              </p>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-8">
+              <motion.a
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                href="#projects"
+                className="btn-premium px-10 py-5 text-sm"
+              >
+                View Portfolio
+              </motion.a>
+              
+              <div className="flex items-center gap-8 text-text-muted">
+                <a href="https://github.com/Ben2221" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+                  <GithubIcon size={24} />
+                </a>
+                <a href="https://linkedin.com/in/ben-savio-6032a2290/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+                  <LinkedinIcon size={24} />
+                </a>
+                <a href="mailto:bensavio2221@gmail.com" className="hover:text-white transition-colors">
+                  <Mail size={24} />
+                </a>
+              </div>
+            </div>
           </motion.div>
         </div>
       </div>
 
-      {/* Scroll indicator */}
       <motion.div
         initial={{ opacity: 0 }}
-        animate={{ opacity: 0.3 }}
-        transition={{ delay: 1.5 }}
-        className="absolute bottom-12 left-1/2 -translate-x-1/2 hidden md:block"
+        animate={{ opacity: 1 }}
+        transition={{ delay: 2, duration: 1 }}
+        className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 text-white/20"
       >
-        <div className="w-[1px] h-24 bg-gradient-to-b from-white to-transparent" />
+        <span className="text-[10px] font-bold uppercase tracking-[0.4em]">Scroll</span>
+        <motion.div
+          animate={{ y: [0, 12, 0] }}
+          transition={{ duration: 2, repeat: Infinity }}
+        >
+          <ArrowDown size={20} />
+        </motion.div>
       </motion.div>
     </section>
   );
 };
 
 export default Hero;
-
