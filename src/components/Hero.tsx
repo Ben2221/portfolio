@@ -1,6 +1,6 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowDown, Mail, Shield, Code2, Terminal } from 'lucide-react';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 const GithubIcon = ({ size = 20 }: { size?: number }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -51,19 +51,19 @@ const Hero = () => {
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
             className="mb-12 relative"
           >
-            <div className="absolute inset-0 bg-primary/20 blur-[60px] rounded-full animate-pulse" />
-            <div className="relative w-40 h-40 md:w-56 md:h-56 rounded-[3rem] overflow-hidden glass border-white/10 shadow-2xl">
+            <div className="absolute inset-0 bg-primary/20 blur-[80px] rounded-full animate-pulse" />
+            <div className="relative w-64 h-64 md:w-80 md:h-80 rounded-[4rem] overflow-hidden glass border-white/10 shadow-2xl">
               <img
                 src="/profilev.jpeg"
                 alt="Ben Savio"
                 className="w-full h-full object-cover"
                 style={{
-                  maskImage: 'radial-gradient(circle at center, black 50%, transparent 100%)',
-                  WebkitMaskImage: 'radial-gradient(circle at center, black 50%, transparent 100%)'
+                  maskImage: 'radial-gradient(circle at center, black 55%, transparent 100%)',
+                  WebkitMaskImage: 'radial-gradient(circle at center, black 55%, transparent 100%)'
                 }}
               />
             </div>
-            
+
             {/* Floating Icons */}
             <motion.div animate={{ y: [0, -10, 0] }} transition={{ duration: 3, repeat: Infinity }} className="absolute -top-4 -right-4 w-12 h-12 glass rounded-2xl flex items-center justify-center text-primary border-white/10">
               <Shield size={20} />
@@ -103,7 +103,7 @@ const Hero = () => {
               >
                 View Portfolio
               </motion.a>
-              
+
               <div className="flex items-center gap-8 text-text-muted">
                 <a href="https://github.com/Ben2221" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
                   <GithubIcon size={24} />

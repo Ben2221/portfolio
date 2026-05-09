@@ -12,7 +12,7 @@
 }
 
 :root {
-  --bg-dark: #030303;
+  --bg-dark: #0b0b12;
   --bg-card: #0a0a0a;
   --primary: #8b5cf6;
   --primary-bright: #c4b5fd;
@@ -33,11 +33,11 @@
 
 html {
   scroll-behavior: smooth;
-  background: var(--bg-dark);
+  background: #0b0b12;
 }
 
 body {
-  background-color: var(--bg-dark);
+  background-color: #0b0b12;
   color: var(--text-main);
   font-family: var(--font-main);
   line-height: 1.6;
