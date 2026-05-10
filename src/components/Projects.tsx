@@ -170,9 +170,9 @@ const ProjectCard = ({ project, index, total }: { project: Project; index: numbe
 
 const Projects = () => {
   return (
-    <section id="projects" className="relative py-32">
+    <section id="projects" className="relative py-20 md:py-32">
       <div className="container relative">
-        <div className="min-h-screen flex flex-col justify-center mb-64">
+        <div className="min-h-[70vh] md:min-h-screen flex flex-col justify-center mb-32 md:mb-64">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -189,7 +189,7 @@ const Projects = () => {
         </div>
 
         {/* Extra travel space for dramatic effect */}
-        <div className="h-[20vh]" />
+        <div className="h-[10vh] md:h-[20vh]" />
 
         <div className="space-y-0 relative">
           {projects.map((project, i) => (
