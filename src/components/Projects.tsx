@@ -99,7 +99,7 @@ const ProjectCard = ({ project, index, total }: { project: Project; index: numbe
           scale,
           top: `calc(-5% + ${index * 25}px)`
         }}
-        className="relative h-[600px] w-full glass rounded-[3rem] overflow-hidden group border-white/5 bg-[#0b0b12]/90 backdrop-blur-3xl shadow-2xl cursor-pointer"
+        className="relative min-h-[600px] md:h-[600px] w-full glass rounded-[2rem] md:rounded-[3rem] overflow-hidden group border-white/5 bg-[#0b0b12]/90 backdrop-blur-3xl shadow-2xl cursor-pointer"
       >
         <div
           className="absolute inset-0 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
@@ -109,13 +109,13 @@ const ProjectCard = ({ project, index, total }: { project: Project; index: numbe
         />
 
         <div className="flex flex-col md:flex-row h-full">
-          <div className="md:w-1/2 p-10 md:p-16 flex flex-col justify-between relative z-20">
+          <div className="md:w-1/2 p-8 md:p-16 flex flex-col justify-between relative z-20 h-1/2 md:h-full">
             <div>
               <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-primary mb-4 block">
                 {project.category}
               </span>
-              <h3 className="text-4xl md:text-6xl font-black tracking-tightest mb-8">{project.title}</h3>
-              <p className="text-text-muted text-lg leading-relaxed mb-10 max-w-md">
+              <h3 className="text-3xl md:text-6xl font-black tracking-tightest mb-4 md:mb-8">{project.title}</h3>
+              <p className="text-text-muted text-base md:text-lg leading-relaxed mb-6 md:mb-10 max-w-md">
                 {project.description}
               </p>
               
@@ -128,7 +128,7 @@ const ProjectCard = ({ project, index, total }: { project: Project; index: numbe
               </div>
             </div>
 
-            <div className="flex gap-8 mt-12">
+            <div className="flex gap-8 mt-6 md:mt-12">
               {project.github && (
                 <a
                   href={project.github}
@@ -154,7 +154,7 @@ const ProjectCard = ({ project, index, total }: { project: Project; index: numbe
             </div>
           </div>
 
-          <div className="md:w-1/2 relative min-h-[300px] md:min-h-full overflow-hidden">
+          <div className="md:w-1/2 relative h-1/2 md:h-full overflow-hidden border-t md:border-t-0 md:border-l border-white/5">
             <img
               src={project.image}
               alt={project.title}
