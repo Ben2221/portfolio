@@ -34,6 +34,7 @@ const projects: Project[] = [
     category: "Cybersecurity / Python",
     description: "A modular web vulnerability scanner detecting OWASP Top 10 flaws like SQLi and XSS. Features automated auditing and structured report generation.",
     tech: ["Python", "OWASP Top 10", "Bash", "Security Auditing"],
+    link: "https://hexascan.benser.tech",
     github: "https://github.com/Ben2221/HexaScan",
     image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=1200"
   },
@@ -51,6 +52,7 @@ const projects: Project[] = [
     category: "AI / Legal Tech",
     description: "AI-powered legal assistant using RAG for precise document analysis and retrieval, bridging the gap between complex law and clear answers.",
     tech: ["Python", "OpenAI", "Next.js", "Pinecone"],
+    link: "https://askmelaw.benser.tech",
     github: "https://github.com/Ben2221/askmelaw",
     image: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&q=80&w=1200"
   }
@@ -87,7 +89,7 @@ const ProjectCard = ({ project, index, total }: { project: Project; index: numbe
   };
 
   return (
-    <div 
+    <div
       ref={container}
       className="h-screen flex items-center justify-center sticky top-0"
     >
@@ -95,7 +97,7 @@ const ProjectCard = ({ project, index, total }: { project: Project; index: numbe
         ref={cardRef}
         onMouseMove={handleMouseMove}
         onClick={handleCardClick}
-        style={{ 
+        style={{
           scale,
           top: `calc(-5% + ${index * 25}px)`
         }}
@@ -118,7 +120,7 @@ const ProjectCard = ({ project, index, total }: { project: Project; index: numbe
               <p className="text-text-muted text-base md:text-lg leading-relaxed mb-6 md:mb-10 max-w-md">
                 {project.description}
               </p>
-              
+
               <div className="flex flex-wrap gap-2">
                 {project.tech.map(t => (
                   <span key={t} className="text-[9px] font-bold uppercase tracking-widest px-4 py-2 rounded-full bg-white/5 border border-white/5">
