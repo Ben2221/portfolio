@@ -21,6 +21,15 @@ interface Project {
 
 const projects: Project[] = [
   {
+    title: "Lumora",
+    category: "Next.js / React Native / TVOS",
+    description: "A premium cross-platform movie and TV streaming ecosystem. Features a Next.js web application with dynamic sliders, search, and watchlist, paired with custom mobile and Android TV apps optimized for D-pad navigation.",
+    tech: ["Next.js", "React Native", "Expo", "Tailwind CSS"],
+    link: "https://lumora.benser.tech",
+    github: "https://github.com/Ben2221/lumora",
+    image: "https://images.unsplash.com/photo-1594909122845-11baa439b7bf?auto=format&fit=crop&q=80&w=1200"
+  },
+  {
     title: "HopAlong",
     category: "Full Stack / Geolocation",
     description: "A full-stack carpooling platform for IIIT Kottayam. Features Maps integration, domain-based authentication, and transactional seat allocation.",
